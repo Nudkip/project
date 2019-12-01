@@ -45,7 +45,7 @@ const server = http.createServer((req,res) => {
 							db.collection('user').insertOne(obj,(err,result) => {
 								res.writeHead(200, {'Content-Type': 'text/html'}); 
          						res.write('<html>')   
-         						res.write('<br><a href="/">Register Success</a>')
+         						res.write('<br><a href="/">Register Successfully!</a>')
         						res.end('</html>') 					
 								});
 						});
@@ -53,7 +53,7 @@ const server = http.createServer((req,res) => {
 						} else {
 								res.writeHead(200, {'Content-Type': 'text/html'}); 
 								res.write('<html>')   
-         						res.write('<br><a href="/">Confirm password does not match!</a>')
+         						res.write('<br><a href="/">Confirm password should be match with the password!</a>')
         						res.end('</html>') 
 								}  
 
@@ -61,7 +61,7 @@ const server = http.createServer((req,res) => {
 
 				} else {
 					res.writeHead(404, {'Content-Type': 'text/plain'}); 
-					res.end('Error.')
+					res.end('Error!')
 				}
 			
 			break;
@@ -80,14 +80,14 @@ const server = http.createServer((req,res) => {
 							const client = new MongoClient(mongoDBurl);
 						client.connect((err) => {
 							assert.equal(null,err);
-							console.log("Connected successfully to server");
+							console.log("Connected successfully to server!");
 							const db = client.db(dbName);
 							try{
 							temp = '{ "name" :  "'+ postdata.logid + '", "password" : "' + postdata.password + '"}';
 							obj ={};
 							obj = JSON.parse(temp);
 							} catch (err) {
-								console.log('Invalid a!');
+								console.log('Invalid!');
 								}
 							db.collection('user').find(obj,(err,result) => {								        
          							read_n_print(res,parseInt(max));        						 					
@@ -98,7 +98,7 @@ const server = http.createServer((req,res) => {
 					 })	
 				} else {
 					res.writeHead(404, {'Content-Type': 'text/plain'}); 
-					res.end('error.')
+					res.end('Error!')
 				}
 			
 			break;
@@ -186,7 +186,7 @@ const server = http.createServer((req,res) => {
 								    "zipcode" : "' + zipcode + '", "latitude" : "' + latitude + '", 
 								    "longitude" : "' + longitude '"};
 						new_r['grades'] = {"user" : "'+ score + '", "score" : "' + score '"};
-						new_r['owner'] = borough
+						new_r['owner'] = owner;
 						new_r['mimetype'] = mimetype;
 						new_r['image'] = new Buffer.from(data).toString('base64');
 						insertRestaurant(db,new_r,(result) => {
@@ -224,13 +224,13 @@ const server = http.createServer((req,res) => {
         	res.write(' <header class="w3-container w3-teal">');
 			res.write('<h1>Login/Register</h1>');
 			res.write('</header>    ');  
-        	res.write(' <h3>Login</h3>');
+        	res.write(' <h2>Login</h2>');
         	res.write(' <form action="/login" method="post" class="w3-container w3-card-2">');
 			res.write('	 <p>');
-			res.write(`	 Name:<br></br><input name="logid" class="w3-input" type="text" style="width:20%" required="">`);
+			res.write(`	 Name:<br></br><input name="logid" class="w3-input" type="text" style="width:10%" required="">`);
 			
 			res.write('	  <p>');
-			res.write(`	  Password:<br></br><input name="password" class="w3-input" type="password" style="width:20%">`);
+			res.write(`	  Password:<br></br><input name="password" class="w3-input" type="password" style="width:10%">`);
 			
 			res.write('	 <p>');
 			res.write(`	  <button class="w3-btn w3-section w3-teal w3-ripple"> Log in </button></p>`);
@@ -239,14 +239,14 @@ const server = http.createServer((req,res) => {
             res.write('      <h3>Register</h3>');
             res.write('      <form action="/register" method="post" class="w3-container w3-card-2">');
             res.write('         <p>');
-            res.write(`         Name:<br></br><input name="regid" class="w3-input" type="text" style="width:20%" required="">`);
+            res.write(`         Name:<br></br><input name="regid" class="w3-input" type="text" style="width:10%" required="">`);
             
             res.write('         <p>');
-            res.write(`         Password:<br></br><input name="regpassword" class="w3-input" type="password" style="width:20%">`);
+            res.write(`         Password:<br></br><input name="regpassword" class="w3-input" type="password" style="width:10%">`);
             res.write('         </p>');
             res.write('         <p>');
             res.write('         <p>');
-            res.write(`         confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:20%">`);
+            res.write(`         confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:10%">`);
             
             res.write('         <p>   ');
             res.write(`          <button class="w3-btn w3-section w3-teal w3-ripple"> Register </button></p>`);
@@ -265,7 +265,7 @@ const server = http.createServer((req,res) => {
 const insertUser = (db,r,callback) => {
 	db.collection('user').insertOne(r,(err,result) => {
 	  assert.equal(err,null);
-	  console.log("insert was successful!");
+	  console.log("Insert was successful!");
 	  console.log(JSON.stringify(result));
 	  callback(result);
 	});
@@ -292,7 +292,7 @@ const read_n_print = (res,max,criteria={}) => {
 	const client = new MongoClient(mongoDBurl);
 	client.connect((err) => {
 		assert.equal(null,err);
-		console.log("Connected successfully to server");
+		console.log("Connected successfully to server!");
 		
 		const db = client.db(dbName);
 		findRestaurants(db, max, criteria, (restaurants) => {
