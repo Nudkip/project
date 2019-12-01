@@ -43,12 +43,12 @@ const server = http.createServer((req,res) => {
 							obj ={};
 							obj = JSON.parse(temp);
 							} catch (err) {
-								console.log('Invalid!');}
+								console.log('Invalid');}
 
 							db.collection('user').insertOne(obj,(err,result) => {
 								res.writeHead(200, {'Content-Type': 'text/html'}); 
          						res.write('<html>')   
-         						res.write('<br><a href="/">Register Success</a>')
+         						res.write('<br><a href="/">Register Successfully</a>')
         						res.end('</html>') 					
 								});
 						});
@@ -56,7 +56,7 @@ const server = http.createServer((req,res) => {
 						} else {
 								res.writeHead(200, {'Content-Type': 'text/html'}); 
 								res.write('<html>')   
-         						res.write('<br><a href="/">Confirm password does not match!</a>')
+         						res.write('<br><a href="/">Both password and confirm password should be match!</a>')
         						res.end('</html>') 
 								}  
 
@@ -64,7 +64,7 @@ const server = http.createServer((req,res) => {
 
 				} else {
 					res.writeHead(404, {'Content-Type': 'text/plain'}); 
-					res.end('Error.')
+					res.end('Error')
 				}
 			
 			break;
@@ -107,7 +107,7 @@ const server = http.createServer((req,res) => {
 					 })	
 				} else {
 					res.writeHead(404, {'Content-Type': 'text/plain'}); 
-					res.end('I can only handle POST request!!! Sorry.')
+					res.end('Error')
 				}
 			
 			break;
@@ -152,7 +152,7 @@ const server = http.createServer((req,res) => {
 				})	
 				} else {
 					res.writeHead(404, {'Content-Type': 'text/plain'}); 
-					res.end('Error.')
+					res.end('Error')
 				}
 			break;
 			
@@ -232,7 +232,7 @@ const server = http.createServer((req,res) => {
 const insertUser = (db,r,callback) => {
 	db.collection('user').insertOne(r,(err,result) => {
 	  assert.equal(err,null);
-	  console.log("insert was successful!");
+	  console.log("Insert successfully");
 	  console.log(JSON.stringify(result));
 	  callback(result);
 	});
