@@ -2,9 +2,9 @@ const http = require('http');
 const url  = require('url');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
-const ObjectID = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectID;
 const mongoDBurl = 'mongodb+srv://g1211533:g1211533@cluster0-rjree.mongodb.net/test?retryWrites=true&w=majority';
-const dbName = 'Project';
+const dbName = 'project';
 var session = require('cookie-session');
 var express = require('express');
 const qs = require ('querystring');
@@ -20,41 +20,53 @@ const server = http.createServer((req,res) => {
 
 	switch(parsedURL.pathname) {
 		case '/register':
-				const form = new formidable.IncomingForm();
-				form.parse(req, (err, fields, files) => {
-				  // console.log(JSON.stringify(files));
-					   
-				  if ( (fields.regpassword == fields.confirmpassword) ){
-						regid = fields.regid;
-						regpassword= fields.regpassword;
-					  }
-				  else {
-						res.writeHead(200, {"Content-Type": "text/html"});
-						res.write('<html><body>Confirm password does not match!<br>');
-						res.end('<a href="/">Back</a></body></html>')}
-				  
-				  let client = new MongoClient(mongoDBurl);
-					client.connect((err) => {
-					  try {
-						  assert.equal(err,null);
-						} catch (err) {
-						  res.writeHead(500,{"Content-Type":"text/plain"});
-						  res.end("MongoClient connect() failed!");
-						  return(-1);
-					  }
-					  const db = client.db(dbName);
-					  let r = {};
-					  r['regid'] = regid;
-					  r['password'] = regpassword;
-					  insertUser(db,r,(result) => {
-						client.close();
-						res.writeHead(200, {"Content-Type": "text/html"});
-						res.write('<html><body>New account registered!<br>');
-						res.end('<a href="/">Back</a></body></html>')
-					  })
+					if (req.method == 'POST') {
+					let data = '';  // message body data
+					console.log("1");
+					// process data in message body
+					req.on('data', (payload) => {
+					   data += payload;
 					});
-				  
-				});
+			
+					req.on('end', () => {  
+						let postdata = qs.parse(data);
+						console.log("2");
+						if (postdata.regpassword==postdata.confirmpassword){
+						console.log("3");
+						const client = new MongoClient(mongoDBurl);
+						client.connect((err) => {
+							assert.equal(null,err);
+							console.log("Connected successfully to server");
+							const db = client.db(dbName);
+							try{
+						temp = '{ "name" :  "'+ postdata.regid + '", "password" : "' + postdata.regpassword + '"}';
+							obj ={};
+							obj = JSON.parse(temp);
+							} catch (err) {
+								console.log('Invalid!');}
+
+							db.collection('user').insertOne(obj,(err,result) => {
+								res.writeHead(200, {'Content-Type': 'text/html'}); 
+         						res.write('<html>')   
+         						res.write('<br><a href="/">Register Success</a>')
+        						res.end('</html>') 					
+								});
+						});
+
+						} else {
+								res.writeHead(200, {'Content-Type': 'text/html'}); 
+								res.write('<html>')   
+         						res.write('<br><a href="/">Confirm password does not match!</a>')
+        						res.end('</html>') 
+								}  
+
+					 	})
+
+				} else {
+					res.writeHead(404, {'Content-Type': 'text/plain'}); 
+					res.end('Error.')
+				}
+			
 			break;
 		case '/login':
 				if (req.method == 'POST') {
@@ -110,8 +122,39 @@ const server = http.createServer((req,res) => {
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
 			break;
 		case '/create':
-			insertDoc(res,parsedURL.query.criteria);
+			if (req.method == 'POST') {
+				let data = '';  // message body data
+				req.on('data', (payload) => {
+					data += payload;
+				});
+				req.on('end', () => {  
+					let postdata = qs.parse(data);
+					const client = new MongoClient(mongoDBurl);
+					client.connect((err) => {
+						assert.equal(null,err);
+						console.log("Connected successfully to server");
+						const db = client.db(dbName);
+						try{
+							temp = '{"name" :  "'+ postdata.name + '", "borough" : "' + postdata.borough + '", "cuisine" : "' + postdata.cuisine + '"}';
+							obj ={};
+							obj = JSON.parse(temp);
+						} catch (err) {
+							console.log('Invalid!');
+						}
+						db.collection('restaurants').insertOne(obj,(err,result) => {
+							res.writeHead(200, {'Content-Type': 'text/html'}); 
+         						res.write('<html>')        
+         						res.write('Successful!')
+        						res.end('</html>') 					
+						});
+					});					
+				})	
+				} else {
+					res.writeHead(404, {'Content-Type': 'text/plain'}); 
+					res.end('Error.')
+				}
 			break;
+			
 		case '/delete':
 			deleteDoc(res,parsedURL.query.criteria);
 			break;
@@ -128,6 +171,16 @@ const server = http.createServer((req,res) => {
 			break;
 		case '/update':
 			updateDoc(res,parsedURL.query);
+			break;
+		case '/insert':
+			res.writeHead(200,{"Content-Type": "text/html"});
+			res.write('<html><body>');
+			res.write('<form action="/create" method="post">');
+			res.write(`<input type="text" name="name"><br>`);
+			res.write(`<input type="text" name="borough"><br>`);
+			res.write(`<input type="text" name="cuisine"><br>`);
+			res.write('<input type="submit" value="Create">')
+			res.end('</form></body></html>');
 			break;
 		default:
 			res.writeHead(200,{"Content-Type": "text/html"});
@@ -162,7 +215,7 @@ const server = http.createServer((req,res) => {
             res.write(`         confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:20%">`);
             
             res.write('         <p>   ');
-            res.write(`         <input type="submit" form="Register form" value="Register"></p>`);
+            res.write(`          <button class="w3-btn w3-section w3-teal w3-ripple"> Register </button></p>`);
             res.write('      </form>');
             res.write('</div> ');        
 			res.end('</body></html>	');
@@ -221,6 +274,7 @@ const read_n_print = (res,max,criteria={}) => {
 				res.write(`<li><a href='/showdetails?_id=${r._id}'>${r.name}</a></li>`)
 			}
 			res.write('</ol>');
+			res.write('<br><a href="/insert">Insert</a>')
 			res.end('</body></html>');
 		});
 	});
