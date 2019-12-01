@@ -227,7 +227,7 @@ const server = http.createServer((req,res) => {
         	res.write(' <h2>Sign in</h2>');
         	res.write(' <form action="/login" method="post" class="w3-container w3-card-2">');
 			res.write('	 <p>');
-			res.write(`	 Name:<br></br><input name="logid" class="w3-input" type="text" style="width:10%" required="">`);
+			res.write(`	 User Name:<br></br><input name="logid" class="w3-input" type="text" style="width:10%" required="">`);
 			
 			res.write('	  <p>');
 			res.write(`	  Password:<br></br><input name="password" class="w3-input" type="password" style="width:10%">`);
@@ -239,7 +239,7 @@ const server = http.createServer((req,res) => {
             res.write('      <h2>Sign up</h2>');
             res.write('      <form action="/register" method="post" class="w3-container w3-card-2">');
             res.write('         <p>');
-            res.write(`         Name:<br></br><input name="regid" class="w3-input" type="text" style="width:10%" required="">`);
+            res.write(`         User Name:<br></br><input name="regid" class="w3-input" type="text" style="width:10%" required="">`);
             
             res.write('         <p>');
             res.write(`         Password:<br></br><input name="regpassword" class="w3-input" type="password" style="width:10%">`);
