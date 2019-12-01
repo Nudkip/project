@@ -233,10 +233,10 @@ const server = http.createServer((req,res) => {
 			res.write(`	  Password:<br></br><input name="password" class="w3-input" type="password" style="width:10%">`);
 			
 			res.write('	 <p>');
-			res.write(`	  <button class="w3-btn w3-section w3-teal w3-ripple"> Log in </button></p>`);
+			res.write(`	  <button class="w3-btn w3-section w3-teal w3-ripple"> Sign in </button></p>`);
 			res.write('	 </form><br></br><br></br>  ');        
             
-            res.write('      <h3>Register</h3>');
+            res.write('      <h2>Register</h2>');
             res.write('      <form action="/register" method="post" class="w3-container w3-card-2">');
             res.write('         <p>');
             res.write(`         Name:<br></br><input name="regid" class="w3-input" type="text" style="width:10%" required="">`);
@@ -246,10 +246,10 @@ const server = http.createServer((req,res) => {
             res.write('         </p>');
             res.write('         <p>');
             res.write('         <p>');
-            res.write(`         confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:10%">`);
+            res.write(`         Confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:10%">`);
             
             res.write('         <p>   ');
-            res.write(`          <button class="w3-btn w3-section w3-teal w3-ripple"> Register </button></p>`);
+            res.write(`          <button class="w3-btn w3-section w3-teal w3-ripple"> Register Account </button></p>`);
             res.write('      </form>');
             res.write('</div> ');        
 			res.end('</body></html>	');
