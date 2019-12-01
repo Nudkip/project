@@ -124,8 +124,8 @@ const server = http.createServer((req,res) => {
 			res.write('Latitude: <input type="text" name="latitude"><br>');
 			res.write('Longitude: <input type="text" name="longitude"><br>');
 			res.write('Score: <input type="text" name="Score"><br>');
-   			res.write('<input type="file" name="filetoupload"><br>');
-			res.write('<input type="submit" value="Create">')
+   			res.write('<input type="file" name="filetoupload"><br><br>');
+			res.write('<input type="submit" value="Insert">')
 			res.end('</form></body></html>');
 			break;
 		case '/create':
