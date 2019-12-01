@@ -1,16 +1,18 @@
 {
-    "name": "server",
+    "name": "s1211533s381project",
     "description": "COMPS381F Project Assignment - Source Code",
     "author": "Fung Hiu Nam <g1211533@study.ouhk.edu.hk>",
     "version": "0.0.1",
     "dependencies": {
-        "express": "*",
-        "ejs": "*",
-        "formidable": "1.2.1",
-        "mongodb": "3.3.5"
-    },
-    "engine": "*",
-    "scripts": {
-        "start": "node server"
-    }
+        "mongodb": "3.1",
+		"express": "latest",
+		"cookie-session": "latest",
+		"formidable": "latest"
+	},
+	"scripts": {
+		"start": "node server.js"
+	},
+	"engines": {
+		"node": ">= 6.0.0"
+	}
 }
