@@ -116,14 +116,14 @@ const server = http.createServer((req,res) => {
 			res.writeHead(200, {'Content-Type': 'text/html'});
     			res.write('<form action="/create" method="post" enctype="multipart/form-data">');
     			res.write('Name: <input type="text" name="name"><br>');
-   			res.write('Borough: <input type="text" name="borough"><br>');
-			res.write('Cuisine: <input type="text" name="cuisine"><br>');
-			res.write('Street: <input type="text" name="street"><br>');
-			res.write('Building: <input type="text" name="building"><br>');
-			res.write('Zipcode: <input type="text" name="zipcode"><br>');
-			res.write('Latitude: <input type="text" name="latitude"><br>');
-			res.write('Longitude: <input type="text" name="longitude"><br>');
-			res.write('Score: <input type="text" name="Score"><br>');
+   			res.write('Borough: <input type="text" name="borough"><br><br>');
+			res.write('Cuisine: <input type="text" name="cuisine"><br><br>');
+			res.write('Street: <input type="text" name="street"><br><br>');
+			res.write('Building: <input type="text" name="building"><br><br>');
+			res.write('Zipcode: <input type="text" name="zipcode"><br><br>');
+			res.write('Latitude: <input type="text" name="latitude"><br><br>');
+			res.write('Longitude: <input type="text" name="longitude"><br><br>');
+			res.write('Score: <input type="text" name="Score"><br><br>');
    			res.write('<input type="file" name="filetoupload"><br><br>');
 			res.write('<input type="submit" value="Insert">')
 			res.end('</form></body></html>');
