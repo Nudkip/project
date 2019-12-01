@@ -16,13 +16,12 @@ const server = http.createServer((req,res) => {
 	console.log(`Incoming request ${req.method}, ${req.url} received at ${timestamp}`);
 
 	let parsedURL = url.parse(req.url,true); // true to get query as object 
-	 		 
+	let max = (parsedURL.query.max) ? parsedURL.query.max : 20; 		 
 
 	switch(parsedURL.pathname) {
 		case '/register':
 					if (req.method == 'POST') {
 					let data = '';  // message body data
-					console.log("1");
 					// process data in message body
 					req.on('data', (payload) => {
 					   data += payload;
@@ -30,9 +29,7 @@ const server = http.createServer((req,res) => {
 			
 					req.on('end', () => {  
 						let postdata = qs.parse(data);
-						console.log("2");
 						if (postdata.regpassword==postdata.confirmpassword){
-						console.log("3");
 						const client = new MongoClient(mongoDBurl);
 						client.connect((err) => {
 							assert.equal(null,err);
@@ -121,6 +118,22 @@ const server = http.createServer((req,res) => {
 			break;
 		case '/search':
 			read_n_print(res,parseInt(max),parsedURL.query.criteria);
+			break;
+		case '/insert':
+			res.writeHead(200, {'Content-Type': 'text/html'});
+    			res.write('<form action="/create" method="post" enctype="multipart/form-data">');
+    			res.write('Name: <input type="text" name="name"><br>');
+   			res.write('Borough: <input type="text" name="borough"><br>');
+			res.write('Cuisine: <input type="text" name="cuisine"><br>');
+			res.write('Street: <input type="text" name="street"><br>');
+			res.write('Building: <input type="text" name="building"><br>');
+			res.write('Zipcode: <input type="text" name="zipcode"><br>');
+			res.write('Latitude: <input type="text" name="latitude"><br>');
+			res.write('Longitude: <input type="text" name="longitude"><br>');
+			res.write('Score: <input type="text" name="Score"><br>');
+   			res.write('<input type="file" name="filetoupload"><br>');
+			res.write('<input type="submit" value="Create">')
+			res.end('</form></body></html>');
 			break;
 		case '/create':
 			if (req.method == 'POST') {
@@ -396,6 +409,14 @@ const updateDoc = (res,newDoc) => {
 		res.write("Updated failed!\n");
 		res.write(newDoc);
 		res.end('<br><a href=/read?max=5>Home</a>');	
+	const insertRestaurant = (db,r,callback) => {
+  		db.collection('restaurants').insertOne(r,(err,result) => {
+   			console.log("51");
+			assert.equal(err,null);
+    			console.log("insert was successful!");
+    			console.log(JSON.stringify(result));
+   		callback(result);
+  		});
 	}
 }
 
