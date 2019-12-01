@@ -213,7 +213,7 @@ const server = http.createServer((req,res) => {
             res.write('         </p>');
             res.write('         <p>');
             res.write('         <p>');
-            res.write(`         confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:20%">`);
+            res.write(`         Confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:20%">`);
             
             res.write('         <p>   ');
             res.write(`          <button class="w3-btn w3-section w3-teal w3-ripple"> Register </button></p>`);
