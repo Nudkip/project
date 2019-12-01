@@ -89,8 +89,7 @@ const server = http.createServer((req,res) => {
 							} catch (err) {
 								console.log('Invalid a!');
 								}
-							db.collection('user').find(obj,(err,result) => {
-								console.log("4");								        
+							db.collection('user').find(obj,(err,result) => {								        
          							read_n_print(res,parseInt(max));        						 					
 								});
 						});					
@@ -433,7 +432,6 @@ const updateDoc = (res,newDoc) => {
 	}
 	const insertRestaurant = (db,r,callback) => {
   		db.collection('restaurants').insertOne(r,(err,result) => {
-   			console.log("51");
 			assert.equal(err,null);
     			console.log("insert was successful!");
     			console.log(JSON.stringify(result));
