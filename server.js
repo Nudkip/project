@@ -210,6 +210,12 @@ const server = http.createServer((req,res) => {
 			res.write(`<input type="text" name="name" value="${parsedURL.query.name}"><br>`);
 			res.write(`<input type="text" name="borough" value="${parsedURL.query.borough}"><br>`);
 			res.write(`<input type="text" name="cuisine" value="${parsedURL.query.cuisine}"><br>`);
+			res.write(`<input type="text" name="Street" value="${parsedURL.query.Street}"><br>`);
+			res.write(`<input type="text" name="Building" value="${parsedURL.query.Building}"><br>`);
+			res.write(`<input type="text" name="Zipcode" value="${parsedURL.query.Zipcode}"><br>`);
+			res.write(`<input type="text" name="Latitude" value="${parsedURL.query.Latitude}"><br>`);
+			res.write(`<input type="text" name="Longitude" value="${parsedURL.query.Longitude}"><br>`);
+			res.write(`<input type="text" name="Score" value="${parsedURL.query.Score}"><br>`);
 			res.write(`<input type="hidden" name="_id" value="${parsedURL.query._id}"><br>`);
 			res.write('<input type="submit" value="Update">')
 			res.end('</form></body></html>');
