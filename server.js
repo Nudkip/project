@@ -8,6 +8,8 @@ const dbName = 'project';
 var session = require('cookie-session');
 var express = require('express');
 const qs = require ('querystring');
+var formidable = require('formidable');
+var fs = require('fs');
 
 app = express();
 
@@ -15,8 +17,8 @@ const server = http.createServer((req,res) => {
 	let timestamp = new Date().toISOString();
 	console.log(`Incoming request ${req.method}, ${req.url} received at ${timestamp}`);
 
-	let parsedURL = url.parse(req.url,true); // true to get query as object 
-	let max = (parsedURL.query.max) ? parsedURL.query.max : 20; 		 
+	let parsedURL = url.parse(req.url,true); // true to get query as object
+	let max = (parsedURL.query.max) ? parsedURL.query.max : 20;
 
 	switch(parsedURL.pathname) {
 		case '/register':
@@ -26,8 +28,8 @@ const server = http.createServer((req,res) => {
 					req.on('data', (payload) => {
 					   data += payload;
 					});
-			
-					req.on('end', () => {  
+
+					req.on('end', () => {
 						let postdata = qs.parse(data);
 						if (postdata.regpassword==postdata.confirmpassword){
 						const client = new MongoClient(mongoDBurl);
@@ -43,40 +45,40 @@ const server = http.createServer((req,res) => {
 								console.log('Invalid!');}
 
 							db.collection('user').insertOne(obj,(err,result) => {
-								res.writeHead(200, {'Content-Type': 'text/html'}); 
-         						res.write('<html>')   
+								res.writeHead(200, {'Content-Type': 'text/html'});
+         						res.write('<html>')
          						res.write('<br><a href="/">Register Successfully!</a>')
-        						res.end('</html>') 					
+        						res.end('</html>')
 								});
 						});
 
 						} else {
-								res.writeHead(200, {'Content-Type': 'text/html'}); 
-								res.write('<html>')   
+								res.writeHead(200, {'Content-Type': 'text/html'});
+								res.write('<html>')
          						res.write('<br><a href="/">Confirm password should be match with the password!</a>')
-        						res.end('</html>') 
-								}  
+        						res.end('</html>')
+								}
 
 					 	})
 
 				} else {
-					res.writeHead(404, {'Content-Type': 'text/plain'}); 
+					res.writeHead(404, {'Content-Type': 'text/plain'});
 					res.end('Error!')
 				}
-			
+
 			break;
 		case '/login':
 				if (req.method == 'POST') {
 					let data = '';  // message body data
-			  
+
 					// process data in message body
 					req.on('data', (payload) => {
 					   data += payload;
 					});
-			
-					req.on('end', () => {  
+
+					req.on('end', () => {
 						let postdata = qs.parse(data);
-						
+
 							const client = new MongoClient(mongoDBurl);
 						client.connect((err) => {
 							assert.equal(null,err);
@@ -89,20 +91,20 @@ const server = http.createServer((req,res) => {
 							} catch (err) {
 								console.log('Invalid!');
 								}
-							db.collection('user').find(obj,(err,result) => {								        
-         							read_n_print(res,parseInt(max));        						 					
+							db.collection('user').find(obj,(err,result) => {
+         							read_n_print(res,parseInt(max));
 								});
-						});					
-								
-						
-					 })	
+						});
+
+
+					 })
 				} else {
-					res.writeHead(404, {'Content-Type': 'text/plain'}); 
+					res.writeHead(404, {'Content-Type': 'text/plain'});
 					res.end('Error!')
 				}
-			
+
 			break;
-		
+
 		case '/read':
 			read_n_print(res,parseInt(max));
 			break;
@@ -133,7 +135,7 @@ const server = http.createServer((req,res) => {
     			form.parse(req, (err, fields, files) => {
 				if (files.filetoupload.size == 0) {
 					res.writeHead(500,{"Content-Type":"text/plain"});
-       					res.end("No file uploaded!");  
+       					res.end("No file uploaded!");
       				}
 				const filename = files.filetoupload.path;
 				let mimetype = "images/jpeg"
@@ -142,19 +144,19 @@ const server = http.createServer((req,res) => {
       				}
 				if (fields.borough && fields.borough.length > 0) {
 					borough = fields.borough;
-      				}      
+      				}
 				if (fields.cuisine && fields.cuisine.length > 0) {
 					cuisine = fields.cuisine;
-      				}      				
+      				}
 				if (fields.street && fields.street.length > 0) {
 					street = fields.street;
-      				}      				
+      				}
 				if (fields.building && fields.building.length > 0) {
 					building = fields.building;
-      				}      				
+      				}
 				if (fields.zipcode && fields.zipcode.length > 0) {
 					zipcode = fields.zipcode;
-      				}      				
+      				}
 				if (fields.latitude && fields.latitude.length > 0) {
 					latitude = fields.latitude;
       				}
@@ -182,11 +184,10 @@ const server = http.createServer((req,res) => {
 						new_r['name'] = name;
 						new_r['borough'] = borough;
 						new_r['cuisine'] = cuisine;
-						new_r['address'] = {"street" : "'+ street + '", "building" : "' + building + '", 
-								    "zipcode" : "' + zipcode + '", "latitude" : "' + latitude + '", 
+						new_r['address'] = {"street" : "'+ street + '", "building" : "' + building + '",
+								    "zipcode" : "' + zipcode + '", "latitude" : "' + latitude + '",
 								    "longitude" : "' + longitude '"};
 						new_r['grades'] = {"user" : "'+ score + '", "score" : "' + score '"};
-						new_r['owner'] = owner;
 						new_r['mimetype'] = mimetype;
 						new_r['image'] = new Buffer.from(data).toString('base64');
 						insertRestaurant(db,new_r,(result) => {
@@ -223,37 +224,37 @@ const server = http.createServer((req,res) => {
 			res.write('</head><body>');
         	res.write(' <header class="w3-container w3-teal">');
 			res.write('<h1>Sign in/Sign up</h1>');
-			res.write('</header>    ');  
+			res.write('</header>    ');
         	res.write(' <h2>Sign in</h2>');
         	res.write(' <form action="/login" method="post" class="w3-container w3-card-2">');
 			res.write('	 <p>');
 			res.write(`	 User Name:<br></br><input name="logid" class="w3-input" type="text" style="width:10%" required="">`);
-			
+
 			res.write('	  <p>');
 			res.write(`	  Password:<br></br><input name="password" class="w3-input" type="password" style="width:10%">`);
-			
+
 			res.write('	 <p>');
 			res.write(`	  <button class="w3-btn w3-section w3-teal w3-ripple"> Sign in </button></p>`);
-			res.write('	 </form><br></br><br></br>  ');        
-            
+			res.write('	 </form><br></br><br></br>  ');
+
             res.write('      <h2>Sign up</h2>');
             res.write('      <form action="/register" method="post" class="w3-container w3-card-2">');
             res.write('         <p>');
             res.write(`         User Name:<br></br><input name="regid" class="w3-input" type="text" style="width:10%" required="">`);
-            
+
             res.write('         <p>');
             res.write(`         Password:<br></br><input name="regpassword" class="w3-input" type="password" style="width:10%">`);
             res.write('         </p>');
             res.write('         <p>');
             res.write('         <p>');
             res.write(`         Confirm password:<br></br><input name="confirmpassword" class="w3-input" type="password" style="width:10%">`);
-            
+
             res.write('         <p>   ');
             res.write(`          <button class="w3-btn w3-section w3-teal w3-ripple"> Sign up </button></p>`);
             res.write('      </form>');
-            res.write('</div> ');        
+            res.write('</div> ');
 			res.end('</body></html>	');
-		
+
 	}
 });
 
@@ -280,7 +281,7 @@ const findRestaurants = (db, max, criteria, callback) => {
 	} catch (err) {
 		console.log('Invalid criteria!  Default to {}');
 	}
-	cursor = db.collection('restaurants').find(criteriaObj).sort({name: -1}).limit(max); 
+	cursor = db.collection('restaurants').find(criteriaObj).sort({name: -1}).limit(max);
 	cursor.toArray((err,docs) => {
 		assert.equal(err,null);
 		//console.log(docs);
@@ -293,7 +294,7 @@ const read_n_print = (res,max,criteria={}) => {
 	client.connect((err) => {
 		assert.equal(null,err);
 		console.log("Connected successfully to server!");
-		
+
 		const db = client.db(dbName);
 		findRestaurants(db, max, criteria, (restaurants) => {
 			client.close();
@@ -319,7 +320,7 @@ const showdetails = (res,_id) => {
 	client.connect((err) => {
 		assert.equal(null,err);
 		console.log("Connected successfully to server");
-		
+
 		const db = client.db(dbName);
 
 		cursor = db.collection('restaurants').find({_id: ObjectId(_id)});
@@ -361,14 +362,14 @@ const insertDoc = (res,doc) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Inserted ${result.insertedCount} document(s) \n`);
-				res.end('<br><a href=/read?max=5>Home</a>');					
+				res.end('<br><a href=/read?max=5>Home</a>');
 			});
 		});
 	} else {
 		res.writeHead(404, {"Content-Type": "text/html"});
 		res.write('<html>123<body>');
 		res.write(`${doc} : Invalid document!\n`);
-		res.end('<br><a href=/read?max=5>Home</a>');	
+		res.end('<br><a href=/read?max=5>Home</a>');
 	}
 }
 
@@ -391,7 +392,7 @@ const deleteDoc = (res,criteria) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Deleted ${result.deletedCount} document(s)\n`);
-				res.end('<br><a href=/read?max=5>Home</a>');					
+				res.end('<br><a href=/read?max=5>Home</a>');
 			});
 		});
 	} else {
@@ -399,7 +400,7 @@ const deleteDoc = (res,criteria) => {
 		res.write('<html>5555<body>');
 		res.write("Invalid criteria!\n");
 		res.write(criteria);
-		res.end('<br><a href=/read?max=5>Home</a>');	
+		res.end('<br><a href=/read?max=5>Home</a>');
 	}
 }
 
@@ -420,7 +421,7 @@ const updateDoc = (res,newDoc) => {
 				res.writeHead(200, {"Content-Type": "text/html"});
 				res.write('<html><body>');
 				res.write(`Updated ${result.modifiedCount} document(s).\n`);
-				res.end('<br><a href=/read?max=5>Home</a>');				
+				res.end('<br><a href=/read?max=5>Home</a>');
 			});
 		});
 	} else {
@@ -428,16 +429,18 @@ const updateDoc = (res,newDoc) => {
 		res.write('<html>44444<body>');
 		res.write("Updated failed!\n");
 		res.write(newDoc);
-		res.end('<br><a href=/read?max=5>Home</a>');	
+		res.end('<br><a href=/read?max=5>Home</a>');
 	}
-	const insertRestaurant = (db,r,callback) => {
-  		db.collection('restaurants').insertOne(r,(err,result) => {
-			assert.equal(err,null);
-    			console.log("insert was successful!");
-    			console.log(JSON.stringify(result));
-   		callback(result);
-  		});
-	}
+
+}
+
+const insertRestaurant = (db,r,callback) => {
+	db.collection('restaurants').insertOne(r,(err,result) => {
+		assert.equal(err,null);
+			console.log("insert was successful!");
+			console.log(JSON.stringify(result));
+	callback(result);
+	});
 }
 
 server.listen(process.env.PORT || 8099);
