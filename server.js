@@ -340,6 +340,12 @@ const showdetails = (res,_id) => {
 			res.write(`<p>Name: ${docs[0].name}</p>`);
 			res.write(`<p>Location: ${docs[0].borough}</p>`);
 			res.write(`<p>Cuisine: ${docs[0].cuisine}</p>`);
+			res.write(`<p>Street: ${docs[0].Street}</p>`);
+			res.write(`<p>Building: ${docs[0].Building}</p>`);
+			res.write(`<p>Zipcode: ${docs[0].Zipcode}</p>`);
+			res.write(`<p>Latitude: ${docs[0].Latitude}</p>`);
+			res.write(`<p>Longitude: ${docs[0].Longitude}</p>`);
+			res.write(`<p>Score: ${docs[0].Score}</p>`);
 			res.write('</h3>')
 			res.write(`<br><a href="/edit?_id=${_id}&name=${docs[0].name}&borough=${docs[0].borough}&cuisine=${docs[0].cuisine}">Edit</a>`)
 			res.write('<br>')
