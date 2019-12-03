@@ -310,6 +310,7 @@ const read_n_print = (res,max,criteria={}) => {
 			}
 			res.write('</ol>');
 			res.write('<br><a href="/insert">Create New Restaurant</a>')
+			res.write('<br><a href="/">Register Successfully!</a>')
 			res.end('</body></html>');
 		});
 	});
